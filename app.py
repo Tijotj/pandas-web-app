@@ -14,5 +14,5 @@ if uploaded_file is not None:
 
 	st.write("### Processed Data ")
 	dep_amt = df[df['Deposit Amt.'].notna()] 
-	st.write(dep_amt.head())
+	st.dataframe(dep_amt)
  
