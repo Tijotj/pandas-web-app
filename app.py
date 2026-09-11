@@ -34,7 +34,7 @@ if uploaded_file is not None:
 	# Plotting the bar chart
 	fig = plt.figure(figsize=(10, 6))
 	sns.barplot(x='Category', y='Total Amount', data=comparison_data, palette='viridis')
-	plt.title('Comparison of Total Amounts: Sreehari Store, Fuel, and Swiggy')
+	plt.title('Comparison of Total Amounts: Swiggy, Total Amount')
 	plt.ylabel('Total Amount (₹)')
 	plt.xlabel('Category')
 	plt.xticks(rotation=45, ha='right')
