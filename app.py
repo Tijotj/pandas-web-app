@@ -17,7 +17,7 @@ if uploaded_file is not None:
 	st.dataframe(df)
 
 	st.write("### Deposit Data ")
-	dep_amt = df[df['Deposit Amt.'].sum()] 
+	dep_amt = df['Deposit Amt.'].sum() 
 	st.write("Total Credited Amount in August: "+dep_amt)
 
 	st.write("### Swiggy Income ")
