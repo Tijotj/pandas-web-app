@@ -23,7 +23,7 @@ if uploaded_file is not None:
 	st.write("### Swiggy Income ")
 	swiggy_income = df[df['Narration'].str.contains('Swiggy', na=False, case=False)]
 	total_swiggy_income = swiggy_income['Deposit Amt.'].sum()
-	st.write("Total Swiggy Income: "+ total_swiggy_income)  
+	st.write(f"Total Swiggy Income: {total_swiggy_income}")  
 
 	comparison_data = pd.DataFrame({
 		'Category': ['Swiggy','Total Income'],
