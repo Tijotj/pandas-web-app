@@ -27,7 +27,7 @@ if uploaded_file is not None:
 
 	comparison_data = pd.DataFrame({
 		'Category': ['Swiggy','Total Income'],
-		'': [total_swiggy_income, dep_amt]  
+		'Total Amount': [total_swiggy_income, dep_amt]  
 	})
 
 
