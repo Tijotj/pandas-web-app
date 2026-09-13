@@ -4,40 +4,52 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 st.title("Financial Analyser")
-uploaded_file1 = st.file_uploader("Choose a CSV or Excel file of last month", type=['csv','xlsx'])
+uploaded_files = st.file_uploader("Choose a CSV or Excel files for comparison", type=['csv','xlsx','xls'], accept_multiple_files= True)
+narration_col = "Narration"
+debit_col = "Withdrawal Amt."
+credit_col = "Deposit Amt"
+all_months_dfs = []
 
-if uploaded_file1 is not None:
-	if uploaded_file1.name.endswith(".csv"): 
-		df = pd.read_csv(uploaded_file1)		
+if uploaded_files is not None:
+	for uploaded_file in uploaded_files:	
+		try:
+			if uploaded_file.name.endswith(".csv"): 
+				month_df = pd.read_csv(uploaded_file)		
+			else:
+				month_df = pd.read_excel(uploaded_file)
+			month_df['Month_source'] = uploaded_file.name	
+			all_months_dfs.append(month_df)
+			st.toast(f"Loaded: {uploaded_file.name}") 
+		except Exception as e:
+			st.error(f"Error reading {uploaded_file.name}: {e}") 
+
+	if all_months_dfs:
+		df = pd.concat(all_months_dfs,ignore_index=True) 
+
+		for col in [debit_col,credit_col]:	
+			if col in df.columns:
+				df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)   	
+
+		if debit_col in df.columns and credit_col in df.columns:
+			st.header("Month over month comparison") 
+			
+			comparison_df = df.groupby('Month_source').agg(
+				Total_Debits = (debit_col, 'sum'),
+				Total_Credits = (credit_col, 'sum'),
+				Transaction_Count = (narration_col, 'count')	
+			) 
+
+			comparison_df['Net_Cash_Flow'] = comparison_df['Total_Credits'] - comparison_df['Total_Debits'] 
+			
+			st.dataframe(
+				comparison_df.style.format({
+					"Total_Debits" : "{:,.2f}INR",
+					"Total_Credits" : "{:,.2f}INR",
+					"Net_Cash_Flow" : "{:,.2f}INR",
+					"Transaction_Count" : "{:,}" 	
+				})
+			) 	
+			
 	else:
-		df = pd.read_excel(uploaded_file1)	
-	st.write("### Original Data")
-	st.dataframe(df)	
-
-	st.write("### Total Credits")
-	total_credited = df['Deposit Amt.'].sum()
-	st.write(f"Total Amount Credited last month {total_credited}") 
-
-	st.write("### Total Debits")
-	total_debits = df['Withdrawal Amt.'].sum()
-	st.write(f"Total Amount Debited last month {total_debits}")  
-
-	st.write("### High 5 transactions")
-	
-	narration_col = "Narration"	
-	amount_col = "Withdrawal Amt."
-	
-	if narration_col in df.columns and amount_col in df.columns:
-		df[amount_col] = pd.to_numeric(df[amount_col], errors='coerce').fillna(0)   	
-		st.subheader("Top 5 spending categories(By Narration)") 
-
-		grouped_df = df.groupby(narration_col)[amount_col].sum().reset_index()   
-
-		top_5_grouped = grouped_df.nlargest(5, amount_col)  
-
-		top_5_grouped.columns = ["Transaction Description","Total Amount"] 
-		st.dataframe(top_5_grouped.style.format({"Total Amount":"${:,.2f}"})) 
- 
-	else:
-		st.error(f"Make sure both '{narration_col}' and '{amount_col}' columns exist in your file.") 	
+		st.error(f"Make sure both files contain columns named exactly '{debit_col}' and '{credit_col}'.") 	
 	
