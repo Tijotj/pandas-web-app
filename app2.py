@@ -15,7 +15,7 @@ if uploaded_file1 is not None:
 	st.dataframe(df)	
 
 	st.write("### Total Credits")
-	total_credited = df['Deposited Amt.'].sum()
+	total_credited = df['Deposit Amt.'].sum()
 	st.write(f"Total Amount Credited last month {total_credited}") 
 
 	st.write("### Total Debits")
