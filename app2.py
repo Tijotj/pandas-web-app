@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 st.title("Financial Analyser")
-uploaded_file1 = st.file_uploader("Choose a CSV or Excel file of last month", type=["csv","xlsx"]")
+uploaded_file1 = st.file_uploader("Choose a CSV or Excel file of last month", type=['csv','xlsx']")
 
 if uploaded_file1 is not None:
 	if uploaded_file1.name.endswith(".csv"): 
