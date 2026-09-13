@@ -7,7 +7,7 @@ st.title("Financial Analyser")
 uploaded_files = st.file_uploader("Choose a CSV or Excel files for comparison", type=['csv','xlsx','xls'], accept_multiple_files= True)
 narration_col = "Narration"
 debit_col = "Withdrawal Amt."
-credit_col = "Deposit Amt"
+credit_col = "Deposit Amt."
 all_months_dfs = []
 
 if uploaded_files is not None:
